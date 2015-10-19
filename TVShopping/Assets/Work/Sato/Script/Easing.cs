@@ -22,6 +22,13 @@ public class Easing : MonoBehaviour
         time /= totaltime;
         return max * time * time + min;
     }
+    //徐々に減速
+    public double OutQuad(double time, double totaltime, double max, double min)
+    {
+        max -= min;
+        time /= totaltime;
+        return -max * time * (time -2) + min;
+    }
 
     //滑らかなSの字加速
     public double InOutQuart(double time, double totaltime, double max, double min)

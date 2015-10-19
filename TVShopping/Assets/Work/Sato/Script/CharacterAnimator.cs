@@ -53,15 +53,17 @@ public class CharacterAnimator : MonoBehaviour
     public float _animation_timer;
     public float _animation_counter  = 0.0f;
     public Vector2 _defalt_scale;
-
+    public Vector2 _defalt_position;
 
     //拡縮度合
     public float _scaling_limit;
     public float _scaling_speed;
     //跳ねる度合
-
+    public float _hopping_limit = 30.0f;
+    public float _total_hopping_time = 1.0f;
     //半回転
-    private const float _rotate_limit = 90.0F;
+    private const float _defalt_rotate = 0.0f;
+    private const float _rotate_limit = 90.0f;
     [Range(0.0f,1.0f)]
     public float _total_rotate_time = 1.0F;
 
@@ -79,7 +81,7 @@ public class CharacterAnimator : MonoBehaviour
 
         //デフォルトのスケールを保存.
         _defalt_scale = new Vector2(transform.localScale.x, transform.localScale.y);
-
+        _defalt_position = transform.position;
     }
 
 
@@ -116,12 +118,43 @@ public class CharacterAnimator : MonoBehaviour
                                                            (Mathf.Sin(_scaling_speed * _animation_timer * RADIUS / 180.0f))
                                                             * _scaling_limit));
 
+                    //他のアニメーションに遷移
+                    if (transform.localScale.y >= _defalt_scale.y - 0.01f)
+                    {
+                        transform.localScale = _defalt_scale;
+                        _current_animation = _next_animation;
+                    }
                     break;
 
                 ///////跳ねる/////////////////////////////////////////////////////////
                 case Animation.Hopping:
 
-                 
+                    //カウンターを更新
+                    _animation_counter += Time.deltaTime;
+
+                    float half_time = _total_hopping_time * 0.5f;
+                    //jump!※っぽく
+                    if (_animation_counter < half_time)
+                    transform.position = new Vector2(_defalt_position.x,
+                                                    (float)_easing.InOutQuart(_animation_counter, half_time,
+                                                                              _hopping_limit,_defalt_position.y));
+
+                    //着地まで
+                    if(_animation_counter >= half_time && _animation_counter < _total_hopping_time)
+                    transform.position = new Vector2(_defalt_position.x,
+                                                    (float)_easing.InOutQuart(_animation_counter - half_time, half_time,
+                                                                              _defalt_position.y,_hopping_limit));
+
+                    //到達時間に達したらリセット
+                    if(_animation_counter >= _total_hopping_time)
+                    {
+                        //りせっと
+                        _animation_counter = 0;
+                        transform.position = _defalt_position;
+                        //他のアニメーションに遷移
+                        _current_animation = _next_animation;
+                    }
+
 
                     break;
 
@@ -131,13 +164,14 @@ public class CharacterAnimator : MonoBehaviour
                     //カウンターを更新
                     _animation_counter += Time.deltaTime;
 
+                    
                     //半回転開始
                     if (_animation_counter < _total_rotate_time && !_is_reverse)
                     {
                         //限界値まで、いーじんぐで加算
                         transform.eulerAngles = new Vector3(0,
-                                                            (float)_easing.InOutQuart((_animation_counter),_total_rotate_time,
-                                                                                       _rotate_limit,0.0),
+                                                            (float)_easing.InQuad(_animation_counter,_total_rotate_time,
+                                                                                  _rotate_limit,_defalt_rotate),
                                                             0);
 
                     }
@@ -159,8 +193,8 @@ public class CharacterAnimator : MonoBehaviour
 
                         //total_time分の時間をかけて元のｙ軸に戻す
                         transform.eulerAngles = new Vector3(0,
-                                                            (float)_easing.InOutQuart((_animation_counter), _total_rotate_time,
-                                                                                       0.0,_rotate_limit),
+                                                            (float)_easing.OutQuad(_animation_counter, _total_rotate_time,
+                                                                                   _defalt_rotate,_rotate_limit),
                                                             0);
                        
                     }//元の位置にもどったら,位置ずれを修正、その後他のアニメーションに移る.
@@ -197,14 +231,14 @@ public class CharacterAnimator : MonoBehaviour
 
     private void ChangeState() {
 
-        if (Input.GetKeyDown("1")) { _current_animation = Animation.UpScaling; }
-        if (Input.GetKeyDown("2")) { _current_animation = Animation.RotatoToChangeState; }
-        if (Input.GetKeyDown("3")) { _current_animation = Animation.Last; }
+        if (Input.GetKeyDown("1")) { _next_animation = Animation.UpScaling; }
+        if (Input.GetKeyDown("2")) { _next_animation = Animation.RotatoToChangeState; }
+        if (Input.GetKeyDown("3")) { _next_animation = Animation.Hopping; }
 
 
-        if (Input.GetKeyDown(KeyCode.Q)) { _current_state = State.Normal; }
-        if (Input.GetKeyDown(KeyCode.W)) { _current_state = State.Smile; }
-        if (Input.GetKeyDown(KeyCode.E)) { _current_state = State.Happened; }
+        if (Input.GetKeyDown(KeyCode.Q)) { _next_state = State.Normal; _current_animation = Animation.RotatoToChangeState; }
+        if (Input.GetKeyDown(KeyCode.W)) { _next_state = State.Smile; _current_animation = Animation.RotatoToChangeState; }
+        if (Input.GetKeyDown(KeyCode.E)) { _next_state = State.Happened; _current_animation = Animation.RotatoToChangeState; }
 
 
 
