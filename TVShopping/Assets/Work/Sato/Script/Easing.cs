@@ -18,10 +18,12 @@ public class Easing : MonoBehaviour
     //徐々に加速
     public double InQuad(double time, double totaltime, double max, double min)
     {
+
         max -= min;
         time /= totaltime;
         return max * time * time + min;
     }
+
     //徐々に減速
     public double OutQuad(double time, double totaltime, double max, double min)
     {
@@ -30,7 +32,7 @@ public class Easing : MonoBehaviour
         return -max * time * (time -2) + min;
     }
 
-    //滑らかなSの字加速
+    //滑らかなSの字加速 リヴァース
     public double InOutQuart(double time, double totaltime, double max, double min)
     {
         max -= min;
@@ -41,6 +43,19 @@ public class Easing : MonoBehaviour
         return -max / 2 * (time * time * time * time - 2) + min;
     }
 
+
+    //急加速
+    public float InExp(float time, float totaltime, float max, float min)
+    {
+        max -= min;
+        return time == 0.0 ? min : max * Mathf.Pow(2,( 10 * (time / totaltime - 1))) + min;
+    }
+    //急減速
+    public float OutExp(float time, float totaltime, float max, float min)
+    {
+        max -= min;
+        return time == totaltime ? max + min : max * (-Mathf.Pow(2, -10 * time / totaltime) + 1) + min;
+    }
 
 
 }
