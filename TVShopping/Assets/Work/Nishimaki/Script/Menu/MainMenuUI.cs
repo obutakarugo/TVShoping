@@ -11,6 +11,8 @@ public class MainMenuUI : MonoBehaviour {
 
     public Texture2D Icon1;
     public Texture2D Icon2;
+    public Texture2D Catalog;
+    public Texture2D Option;
 
     public Texture2D[] Menu;
 
@@ -40,12 +42,12 @@ public class MainMenuUI : MonoBehaviour {
         Style.fontSize = 30;
         Style.normal = State;
 
-        if (GUI.Button(new Rect(0, 0, Screen.width/4, Screen.height/4), "カタログ"))
+        if (GUI.Button(new Rect(0, 0, Screen.width/4, Screen.height/4), Catalog))
         {
             Application.LoadLevel("Catalog");
         }
 
-        if (GUI.Button(new Rect(Screen.width / 2 + Screen.width / 4, 0, Screen.width / 4, Screen.height / 4), "オプション"))
+        if (GUI.Button(new Rect(Screen.width/2+Screen.width/4, 0, Screen.width/4 , Screen.height/4 ), Option))
         {
             Application.LoadLevel("Option");
         }
@@ -70,7 +72,7 @@ public class MainMenuUI : MonoBehaviour {
             Debug.Log(menu_number);
         }
 
-        if (GUI.Button(new Rect(Screen.width / 4, Screen.height / 6, Screen.width / 2, Screen.height/2+Screen.height/3 ), Menu[menu_number]))
+        if (GUI.Button(new Rect(Screen.width / 12, Screen.height / 12, Screen.width / 2 + Screen.width / 3, Screen.height / 2 + Screen.height / 2), Menu[menu_number]))
         {
             Debug.Log(menu_number);
         }
