@@ -5,7 +5,7 @@ using MiniJSON;
 // 必要な要素を詰め込んでみる
 public class QTE_Tap : MonoBehaviour
 {
-    RayTouch _ray_touch;
+    RayTouch2D _ray_touch;
     // 時間経過用
     float _timer;
     // いつ？
@@ -22,11 +22,12 @@ public class QTE_Tap : MonoBehaviour
     private bool _doCreate = false;
     // 一度だけ反応させる為の制御用変数
     private bool _doTouch = false;
+    private bool _testBool = false;
 
     // 生成するオブジェクトの情報
     [SerializeField]
     private GameObject _icon = null;
-    public GameObject Icon
+    private GameObject Icon
     {
         get
         {
@@ -39,7 +40,7 @@ public class QTE_Tap : MonoBehaviour
     public Camera targetCamera;
     void Awake()
     {
-        _ray_touch = GetComponent<RayTouch>();
+        _ray_touch = GetComponent<RayTouch2D>();
         if (this.targetCamera == null)
         {
             targetCamera = Camera.main;
@@ -48,16 +49,16 @@ public class QTE_Tap : MonoBehaviour
 
     // アイコンの表示-----------------------------------------------
     // 必須：表示するタイミング・ポジション・制限時間
-    // 時間内にスワイプをしていない場合にも戻り値が必要になってしまうので
+    // 時間内にタップをしていない場合にも戻り値が必要になってしまうので
     // bool型にするのは諦めました。
-    void drawQTE(float time, Vector3 pos, float time_limit)
+    private void drawQTE(bool boolian, float time, Vector3 pos, float time_limit)
     {
         // 常にカメラの方向に正面を向ける(ビルボード)
         this.transform.LookAt(this.targetCamera.transform.position);
 
         // 指定した時間に表示
         if (_timer >= time && !_doCreate)
-        {
+        {            
             _icon = Instantiate(Icon);
             _icon.transform.Translate(pos);
             _doCreate = true;
@@ -74,6 +75,7 @@ public class QTE_Tap : MonoBehaviour
                 _doTouch = true;
                 Destroy(_icon);
                 Destroy(this);
+                boolian = true;
             }
         }
         // 制限時間内にタッチしなければ
@@ -82,15 +84,16 @@ public class QTE_Tap : MonoBehaviour
             Debug.Log("タップ失敗！！");
             Destroy(_icon);
             Destroy(this);
+            boolian = false;
         }
     }
 
-    void Update()
+    private void Update()
     {
         _timer += 1.0f * Time.deltaTime;
 
         // 何秒後に表示するか, どこに出すか, 何秒表示するか
-        drawQTE(_time, _pos, _limit);
+        drawQTE(_testBool, _time, _pos, _limit);
     }
 }
 

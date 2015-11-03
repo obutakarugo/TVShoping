@@ -5,7 +5,7 @@ using MiniJSON;
 // 必要な要素を詰め込んでみる
 public class QTE_Swipe : MonoBehaviour
 {
-    SwipeSystem _ray_swipe;
+    SwipeSystem2D _ray_swipe;
     // 時間経過用
     float _timer;
     // いつ？
@@ -25,6 +25,7 @@ public class QTE_Swipe : MonoBehaviour
     private bool _doCreate = false;
     // 一度だけ反応させる為の制御用変数
     private bool _doSwipe = false;
+    private bool _testBool = false;
 
     // 生成するオブジェクトの情報
     [SerializeField]
@@ -42,7 +43,7 @@ public class QTE_Swipe : MonoBehaviour
     public Camera targetCamera;
     void Awake()
     {
-        _ray_swipe = GetComponent<SwipeSystem>();
+        _ray_swipe = GetComponent<SwipeSystem2D>();
         if (this.targetCamera == null)
         {
             targetCamera = Camera.main;
@@ -92,13 +93,13 @@ public class QTE_Swipe : MonoBehaviour
     }
 
     // 実装例
-    //void Update()
-    //{
-    //    _timer += 1.0f * Time.deltaTime;
+    void Update()
+    {
+        _timer += 1.0f * Time.deltaTime;
 
-    //    // true/falseを返したいbool型変数を入れて下さい。
-    //    // 何秒後に表示するか, どこに出すか, 何秒表示するか
-    //    drawQTE(_testBool, _time, _pos, _limit, _direction);
-    //}
+        // true/falseを返したいbool型変数を入れて下さい。
+        // 何秒後に表示するか, どこに出すか, 何秒表示するか
+        drawQTE(_testBool, _time, _pos, _limit, _direction);
+    }
 }
 
