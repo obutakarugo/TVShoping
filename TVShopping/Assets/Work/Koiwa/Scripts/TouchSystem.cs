@@ -4,13 +4,8 @@ using System.Collections;
 
 public class TouchSystem : MonoBehaviour
 {
-    void Update()
-    {
-        isTouch();
-    }
-
     // 画面のタッチ判定
-    bool isTouch()
+    public bool isTouch()
     {
         for (int i = 0; i < Input.touchCount; i++)
         {
@@ -22,14 +17,6 @@ public class TouchSystem : MonoBehaviour
                 Debug.Log("True!!");
                 return true;
             }
-
-            // タッチを継続していてもtrueを返す
-            else if (touch.phase == TouchPhase.Stationary)
-            {
-                Debug.Log("Stationary!!");
-                return true;
-            }
-
             // タッチを離した瞬間にfalseを返す
             else if (touch.phase == TouchPhase.Ended)
             {
