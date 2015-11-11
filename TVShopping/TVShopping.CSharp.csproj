@@ -51,17 +51,11 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
@@ -75,8 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Work\Koiwa\MiniGame\Game_Belt.cs" />
-    <Compile Include="Assets\Work\Koiwa\MiniGame\Game_Pillow.cs" />
+    <Compile Include="Assets\Work\Koiwa\MiniGame\Game_Pillow\Pillow_Manager.cs" />
     <Compile Include="Assets\Work\Koiwa\OperationSystem.cs" />
+    <Compile Include="Assets\Work\Koiwa\Resources\MiniGameObj\Pillow_Move.cs" />
     <Compile Include="Assets\Work\Koiwa\Scripts\Destroy_Object.cs" />
     <Compile Include="Assets\Work\Koiwa\Scripts\QTE_Hold.cs" />
     <Compile Include="Assets\Work\Koiwa\Scripts\QTE_Swipe.cs" />
@@ -98,6 +93,9 @@
     <Compile Include="Assets\Work\Sato\Script\SaveJson.cs" />
     <Compile Include="Assets\Work\Sato\Script\ScoreManager.cs" />
     <Compile Include="Assets\Work\Sato\Script\ScoreText.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Work\Koiwa\枕投げの設定.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
