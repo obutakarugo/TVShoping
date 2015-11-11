@@ -15,6 +15,6 @@ public class Scene_Manager : MonoBehaviour
 
     public void NextScene(SCENE_NAME scene)
     {
-        Application.LoadLevel("" + scene + "");
+        Application.LoadLevel(scene.ToString());
     }
 }
