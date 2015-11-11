@@ -16,8 +16,6 @@ public class Game_Belt : MonoBehaviour
     private float _body_fat_per = 30.0f;
     // タップした回数(スコア)
     private int _score = 0;
-    // ベルトが震える時の振動用変数(0.0f～1.0f)
-    private float _random_value;
     // 「体脂肪率」の表示
     public Text _score_text;
     public Text _time_text;
@@ -78,7 +76,6 @@ public class Game_Belt : MonoBehaviour
 
     void Awake()
     {
-        _random_value = Random.value;
         _ray_touch = GetComponent<RayTouch2D>();
         _score_manager = GetComponent<ScoreManager>();
         if (this.targetCamera == null)
