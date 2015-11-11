@@ -81,8 +81,11 @@
     <Compile Include="Assets\Work\Koiwa\Scripts\SwipeSystem.cs" />
     <Compile Include="Assets\Work\Koiwa\Scripts\SwipeSystem2D.cs" />
     <Compile Include="Assets\Work\Koiwa\Scripts\TouchSystem.cs" />
+    <Compile Include="Assets\Work\Nishimaki\Menu.cs" />
     <Compile Include="Assets\Work\Nishimaki\Script\Aspect.cs" />
     <Compile Include="Assets\Work\Nishimaki\Script\Menu\MainMenuUI.cs" />
+    <Compile Include="Assets\Work\Nishimaki\Script\ScenarioManager.cs" />
+    <Compile Include="Assets\Work\Ono\Main.cs" />
     <Compile Include="Assets\Work\Sato\Plugins\JsonNode.cs" />
     <Compile Include="Assets\Work\Sato\Plugins\MiniJSON.cs.cs" />
     <Compile Include="Assets\Work\Sato\Script\AnimatorScenario.cs" />
@@ -93,9 +96,13 @@
     <Compile Include="Assets\Work\Sato\Script\SaveJson.cs" />
     <Compile Include="Assets\Work\Sato\Script\ScoreManager.cs" />
     <Compile Include="Assets\Work\Sato\Script\ScoreText.cs" />
+    <Compile Include="Assets\Work\Scene_Manager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Work\Koiwa\枕投げの設定.txt" />
+    <None Include="Assets\Work\Nishimaki\Others\Scenario\ジム移動ルート 失敗.txt" />
+    <None Include="Assets\Work\Nishimaki\Others\Scenario\ジム移動ルート 成功.txt" />
+    <None Include="Assets\Work\Nishimaki\Others\Scenario\ジム移動ルート.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
