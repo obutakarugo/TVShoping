@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Pillow_Manager : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class Pillow_Manager : MonoBehaviour
     private float _game_timer = 0.0f;
     // タップした回数(スコア)
     private int _score = 0;
+
+    // UIに表示するテキスト
+    public Text _score_text;
+    public Text _time_text;
 
     #region 観客の表示(１人分)
     [SerializeField]
@@ -42,6 +47,7 @@ public class Pillow_Manager : MonoBehaviour
         {
             _gallery = Instantiate(Gallery);
             _gallery.transform.Translate(_gallery_pos);
+			_gallery.transform.parent = transform;
             _doCreate_gallery = true;
         }
     }
@@ -58,6 +64,7 @@ public class Pillow_Manager : MonoBehaviour
         {
             if (_character != null) { return _character; }
             _character = Resources.Load<GameObject>("MiniGameObj/Character");
+			_character.transform.parent = transform;
             return _character;
         }
     }
@@ -69,13 +76,14 @@ public class Pillow_Manager : MonoBehaviour
         {
             _character = Instantiate(Character);
             _character.transform.Translate(_target_pos);
+			_character.transform.parent = transform;
             _doCreate = true;
         }
     }
     #endregion
     #region 枕の生成
     private int _create_count = 0;
-    private int _max_count = 50;
+    private int _max_count = 100;
     [SerializeField]
     private GameObject _pillow = null;
     private GameObject Pillow
@@ -93,6 +101,11 @@ public class Pillow_Manager : MonoBehaviour
     {
         _touch_system = GetComponent<TouchSystem>();
         _score_manager = GetComponent<ScoreManager>();
+        _score_text.GetComponent<Text>();
+        _time_text.GetComponent<Text>();
+
+        _score_text.text = "ぶつけた個数：" + _score + "個";
+        _time_text.text = "残り：" + _time_limit + "秒";
     }
 
     void TapReaction()
@@ -112,6 +125,8 @@ public class Pillow_Manager : MonoBehaviour
     void Update()
     {
         _game_timer += Time.deltaTime;
+        _score_text.text = "ぶつけた個数：" + _score + "個";
+
         DrawGallery();
         DrawTarget();
 
@@ -124,11 +139,14 @@ public class Pillow_Manager : MonoBehaviour
             //{
             //    Destroy(this._pillow);
             //}
+            _time_text.text = "残り：" + Mathf.Floor(_time_limit - _game_timer) + "秒";
+
         }
         // 制限時間を越えたらスコアを渡す
         else if (_game_timer > _time_limit)
         {
             _score_manager.ScoreValueUp(_score);
+            _time_text.text = "終了！！";
         }
     }
 }

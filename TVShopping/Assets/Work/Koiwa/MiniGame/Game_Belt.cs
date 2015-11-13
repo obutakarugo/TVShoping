@@ -82,6 +82,9 @@ public class Game_Belt : MonoBehaviour
         {
             targetCamera = Camera.main;
         }
+        _score_text.GetComponent<Text>();
+        _time_text.GetComponent<Text>();
+
         _score_text.text = "体脂肪率：" + _body_fat_per + "％";
         _time_text.text = "残り：" + _time_limit + "秒";
     }
@@ -94,7 +97,8 @@ public class Game_Belt : MonoBehaviour
         {
             _character = Instantiate(Character);
             _character.transform.Translate(_char_pos);
-            _doCreate_char = true;
+			_character.transform.parent = transform;
+			_doCreate_char = true;
         }
     }
 
@@ -106,6 +110,7 @@ public class Game_Belt : MonoBehaviour
         {
             _belt = Instantiate(Belt);
             _belt.transform.Translate(_belt_pos);
+			_belt.transform.parent = transform;
             _doCreate_belt = true;
         }
     }
@@ -118,6 +123,7 @@ public class Game_Belt : MonoBehaviour
         {
             _icon = Instantiate(Icon);
             _icon.transform.Translate(_icon_pos);
+			_icon.transform.parent = transform;
             _doCreate_icon = true;
         }
     }
