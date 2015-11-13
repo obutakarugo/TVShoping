@@ -16,39 +16,44 @@ public class CharacterAnimator : MonoBehaviour
     //sin,cos計算用に円周率を固定.雑把に.14まで。
     private const float RADIUS = 3.14F;
     Easing _easing;
-
+	SaveJson _save_json;
 
     //アニメーションが遷移した時間を一時的に保存する場所
     public float _transition_time = 0.0f;
 
     //使用するか未定.Test段階
     //何秒に,どのアニメーションで、どの状態かに遷移したかを保存する型
-    public struct TransitionInfo
+	/* public struct TransitionInfo
     {
         public float _TransitionTime { get; private set; }
-        public Animation _Animation { get; private set; }
-        public State _State { get; private set; }
+		public int _Animation { get; private set; }
+		public int _State { get; private set; }
 
       
         //コンストラクタ
         public TransitionInfo(float time,Animation animation,State state)
         {
             this._TransitionTime = time;
-            this._Animation = animation;
-            this._State = state;
-            //デバッグ用　ちょっと重くなるので、注意.基本的にはコメントアウトすべきかも。
-            //Debug.Log("time : " + _TransitionTime + " animation : " + _Animation + " state:" + _State);
+			this._Animation = (int)animation;
+			this._State = (int)state;
+          
         }
         
-    }
-    private List<TransitionInfo> _transition_index = new List<TransitionInfo>();
-    private float _transiton_time = 0.0f;
+    }*/
+	//Animation Jsondate 格納リスト
+	private List<SaveJson.TransitionInfo> _transition_index = new List<SaveJson.TransitionInfo>();
+	[SerializeField]
+	private bool DoRoadedAnimarionJsonDate;
+	[SerializeField]
+	private GameMainManager.Root _root;
+    private float _transiton_time;
     private bool _do_initialize_scenario = false; 
     private int _current_scenario_number = 0;
     private bool _do_save_scenario = false;
     private bool _do_scenario = false;
     private float  _save_current_time = 0.0f;
     private float _debug_current_time = 0.0f;
+
 
     //表情(画像)パターン
     public enum State
@@ -109,9 +114,9 @@ public class CharacterAnimator : MonoBehaviour
     //初期化
     void Awake()
     {
-
-        //easing初期化
+		//easing初期化
         _easing = GameObject.FindObjectOfType<Easing>();
+		_save_json = GameObject.FindObjectOfType<SaveJson>();
 
         //sprite初期化
         _character = GetComponent<SpriteRenderer>();
@@ -120,6 +125,12 @@ public class CharacterAnimator : MonoBehaviour
         //デフォルトのスケールを保存.
         _defalt_scale = new Vector2(transform.localScale.x, transform.localScale.y);
         _defalt_position = transform.localPosition;
+
+		//アニメーションデータを読み込み
+		if (DoRoadedAnimarionJsonDate) {
+			_transition_index = _save_json.LoadAnimation(_root);
+			_do_scenario = true;
+		}
     }
 
 
@@ -135,12 +146,12 @@ public class CharacterAnimator : MonoBehaviour
         //アニメーションのシナリオを再生
         if (_do_scenario)
         {
-            
-            
-            //ゲームの更新時間
+        
+			//ゲームの更新時間
             _debug_current_time += Time.deltaTime;
-            PlayScenario();
-        }
+			PlayScenario();
+        
+		}
 
         //シナリオ保存開始
         if (_do_save_scenario)
@@ -225,13 +236,13 @@ public class CharacterAnimator : MonoBehaviour
             if (_animation_counter < half_time)
                 transform.position = new Vector2(_defalt_position.x,
                                                 (float)_easing.InOutQuart(_animation_counter, half_time,
-                                                                          _hopping_limit, _defalt_position.y));
+						_hopping_limit+_defalt_position.y, _defalt_position.y));
 
             //着地まで
             if (_animation_counter >= half_time && _animation_counter < _total_hopping_time)
                 transform.position = new Vector2(_defalt_position.x,
                                                 (float)_easing.InOutQuart(_animation_counter - half_time, half_time,
-                                                                          _defalt_position.y, _hopping_limit));
+						_defalt_position.y, _hopping_limit+_defalt_position.y));
 
             //到達時間に達したらリセット
             if (_animation_counter >= _total_hopping_time)
@@ -307,9 +318,12 @@ public class CharacterAnimator : MonoBehaviour
 
         }
     }
+/////////////////////////////////////////////////////////////////
+//以下Canvas用　Debugコマンド//////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
-    //Debugコマンド/////////////////////////////////////////////////////////////////////////////////////////////////////
-  
 
     //アニメーションボタン
     public void UpscaleButton()
@@ -318,7 +332,7 @@ public class CharacterAnimator : MonoBehaviour
         transform.position = _defalt_position;
         //セーブ中だったら
         if (_do_save_scenario)
-            _transition_index.Add(new TransitionInfo(_save_current_time,_current_animation,_current_state));
+			_transition_index.Add(new SaveJson.TransitionInfo(_save_current_time,_current_animation,_current_state));
         
        
 
@@ -330,7 +344,7 @@ public class CharacterAnimator : MonoBehaviour
         transform.localScale = _defalt_scale;
         //セーブ中だったら
         if (_do_save_scenario)
-            _transition_index.Add(new TransitionInfo(_save_current_time,_current_animation, _current_state));
+			_transition_index.Add(new SaveJson.TransitionInfo(_save_current_time,_current_animation, _current_state));
        
         //      Debug.Log("Time:" + Time.time + "AnimationTypeNumber:" + (int)_current_animation);
 
@@ -345,7 +359,7 @@ public class CharacterAnimator : MonoBehaviour
         if (_next_state != _current_state) _current_animation = Animation.RotatoToChangeState;
         //セーブ中だったら
         if (_do_save_scenario)
-        _transition_index.Add(new TransitionInfo(_save_current_time,_current_animation, _next_state));
+			_transition_index.Add(new SaveJson.TransitionInfo(_save_current_time,_current_animation, _next_state));
        
         //  Debug.Log("Time:" + Time.time + "AnimationTypeNumber:" + (int)_current_animation);
 
@@ -357,7 +371,7 @@ public class CharacterAnimator : MonoBehaviour
         if (_next_state != _current_state) _current_animation = Animation.RotatoToChangeState;
         //セーブ中だったら
         if (_do_save_scenario)
-            _transition_index.Add(new TransitionInfo(_save_current_time, _current_animation, _next_state));
+			_transition_index.Add(new SaveJson.TransitionInfo(_save_current_time, _current_animation, _next_state));
        
         //  Debug.Log("Time:" + Time.time + "AnimationTypeNumber:" + (int)_current_animation);
 
@@ -370,11 +384,14 @@ public class CharacterAnimator : MonoBehaviour
         if (_next_state != _current_state) _current_animation = Animation.RotatoToChangeState;
         //セーブ中だったら
         if (_do_save_scenario)
-            _transition_index.Add(new TransitionInfo(_save_current_time, _current_animation, _next_state));
+			_transition_index.Add(new SaveJson.TransitionInfo(_save_current_time, _current_animation, _next_state));
        
         // Debug.Log("Time:" + Time.time + "AnimationTypeNumber:" + (int)_current_animation);
 
     }
+
+
+
 
 
     public void PlayScenario()
@@ -393,9 +410,10 @@ public class CharacterAnimator : MonoBehaviour
                 //その時に遷移するアニメーションと表情
                 _transition_time =
                     _transition_index[_current_scenario_number + 1]._TransitionTime
-                     - _transition_index[_current_scenario_number]._TransitionTime;
-                _current_animation = _transition_index[_current_scenario_number]._Animation;
-                _next_state = _transition_index[_current_scenario_number]._State;
+					-(_transition_index[_current_scenario_number]._TransitionTime);
+
+				_current_animation = (Animation)_transition_index[_current_scenario_number]._Animation;
+				_next_state = (State)_transition_index[_current_scenario_number]._State;
 
                 _do_initialize_scenario = false;
 
@@ -436,7 +454,9 @@ public class CharacterAnimator : MonoBehaviour
 
         //saveを終了 
         _do_save_scenario = false;
-        _transition_index.Add(new TransitionInfo(_save_current_time, _current_animation, _current_state));
+		_save_json.AddAnimation (_transition_index);
+		_save_json.SavedAnimation (_root);
+		_transition_index.Add(new SaveJson.TransitionInfo(-1, _current_animation, _current_state));
 
     }
 

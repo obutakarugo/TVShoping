@@ -14,7 +14,7 @@ public class ScoreManager : MonoBehaviour {
     //スコア追加（視聴率アップ）
     public void ScoreValueUp(float add_value = 1.0f) {
 
-        _tv_rating = add_value;
+		_tv_rating += add_value;
        
     }
 
