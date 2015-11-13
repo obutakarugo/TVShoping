@@ -17,12 +17,22 @@ public class GameMainManager : MonoBehaviour {
     //分岐
     public enum Root {
     
+		Main,
+		AbeMain,//α用
+		JonMain,//アルファ用
+
         RootA,
         RootB,
-        RootC
+		RootC,
+
+
+
+
+
 
     }
     public Root CurrentRoot{ get; set; }
+
 
 
 

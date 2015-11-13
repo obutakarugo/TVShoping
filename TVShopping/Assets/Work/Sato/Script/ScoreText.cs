@@ -29,9 +29,9 @@ public class ScoreText : MonoBehaviour {
         _score_text = GetComponent<Text>();
         
         //デフォルト値
-        _current_score_value = 0.1f;
+		_current_score_value = 0.001f;
         ////Debug 用　test値
-        _score_value = 10.14f;
+        
         //Score textを描画
         _score_text.text = _current_score_value.ToString();
 
@@ -41,13 +41,13 @@ public class ScoreText : MonoBehaviour {
     void Update () {
 
         //スコア取得 //(毎回取得してるので無駄、あとでリファ)
-        //_score_value = _score_reference.ScoreValue;
+        _score_value = _score_reference.ScoreValue;
 
         //表示してるスコアが実際のスコアと差があったら
         if (_current_score_value != _score_value) {
 
             //徐々にスコアを加算
-            _current_score_value += 0.01f;
+			_current_score_value += 0.075f;
              
             //表示スコアが実際のスコアと同じ、またはそれ以上になったら
             if (_current_score_value >= _score_value) {
