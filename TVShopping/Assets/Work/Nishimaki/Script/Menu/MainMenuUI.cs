@@ -74,7 +74,7 @@ public class MainMenuUI : MonoBehaviour {
 
         if (GUI.Button(new Rect(Screen.width / 12, Screen.height / 12, Screen.width / 2 + Screen.width / 3, Screen.height / 2 + Screen.height / 2), Menu[menu_number]))
         {
-            Debug.Log(menu_number);
+            Application.LoadLevel("Sato");
         }
         
     }
